@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        {% if name %}
+            <h1>Привет, {{ name }}!</h1>
+        {% else %}
+            <h1>Привет!</h1>
+        {% endif %}
+        <form action="/logout">
+            <input type="submit" value="Выйти">
+        </form>
+    </body>
+</html>
