@@ -1,55 +1,47 @@
-from flask import Flask, jsonify, request, render_template
+# filename hm5
+from fastapi import FastAPI, Request
+from fastapi.templating import Jinja2Templates
+from pydantic import BaseModel
 
-app = Flask(__name__)
+app = FastAPI()
 
 
-class User:
-    def __init__(self, id, name, email, password):
-        self.id = id
-        self.name = name
-        self.email = email
-        self.password = password
+class User(BaseModel):
+    id: int
+    name: str
+    email: str
+    password: str
 
 
 users = []
 
-
-@app.route('/api/users', methods=['POST'])
-def add_user():
-    data = request.get_json()
-    expected_keys = ['id', 'name', 'email', 'password']
-    if not all(key in data for key in expected_keys):
-        return jsonify({'error': 'Missing keys in request body'}), 400
-    user = User(data['id'], data['name'], data['email'], data['password'])
-    users.append(user)
-    return jsonify({'message': 'User added successfully'}), 201
+templates = Jinja2Templates(directory="templates")
 
 
-@app.route('/api/users/<int:user_id>', methods=['DELETE'])
-def delete_user(user_id):
-    user = next((user for user in users if user.id == user_id), None)
-    if not user:
-        return jsonify({'error': 'User not found'}), 404
-    users.remove(user)
-    return jsonify({'message': 'User deleted successfully'}), 200
+@app.post("/users/")
+async def create_user(user: User):
+    users.append(user.dict())
+    return user
 
 
-@app.route('/users', methods=['GET'])
-def list_users():
-    return render_template('users.html', users=users)
+@app.put("/users/{user_id}")
+async def update_user(user_id: int, user: User):
+    for u in users:
+        if u["id"] == user_id:
+            u.update(user.dict())
+            return u
+    return {"error": "User not found"}
 
 
-@app.route('/api/users/<int:user_id>', methods=['PUT'])
-def update_user(user_id):
-    user = next((user for user in users if user.id == user_id), None)
-    if not user:
-        return jsonify({'error': 'User not found'}), 404
-    data = request.get_json()
-    user.name = data['name']
-    user.email = data['email']
-    user.password = data['password']
-    return jsonify({'message': 'User updated successfully'}), 200
+@app.delete("/users/{user_id}")
+async def delete_user(user_id: int):
+    for i, u in enumerate(users):
+        if u["id"] == user_id:
+            del users[i]
+            return {"success": f"User with id {user_id} deleted."}
+    return {"error": "User not found"}
 
 
-if __name__ == '__main__':
-    app.run(debug=True)
+@app.get("/users/")
+async def read_users(request: Request):
+    return templates.TemplateResponse("users.html", {"request": request, "users": users})

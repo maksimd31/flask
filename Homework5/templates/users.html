@@ -1,43 +1,36 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <title>User List</title>
-  </head>
-  <body>
-    <h1>User List</h1>
+<head>
+    <title>Список пользователей</title>
+</head>
+<body>
+    <h1>Список пользователей</h1>
     <table>
-      <thead>
         <tr>
-          <th>ID</th>
-          <th>Name</th>
-          <th>Email</th>
+            <th>ID</th>
+            <th>Имя</th>
+            <th>Email</th>
+            <th>Пароль</th>
         </tr>
-      </thead>
-      <tbody>
         {% for user in users %}
         <tr>
-          <td>{{ user.id }}</td>
-          <td>{{ user.name }}</td>
-          <td>{{ user.email }}</td>
+            <td>{{ user.id }}</td>
+            <td>{{ user.name }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.password }}</td>
         </tr>
         {% endfor %}
-      </tbody>
     </table>
-    <form action="/api/users" method="POST">
-      <label for="id">ID:</label>
-      <input type="text" name="id" id="id">
+    <form action="/users/" method="post">
+        <input type="text" name="id" placeholder="ID">
 
-      <label for="name">Name:</label>
-      <input type="text" name="name" id="name">
+        <input type="text" name="name" placeholder="Имя">
 
-      <label for="email">Email:</label>
-      <input type="email" name="email" id="email">
+        <input type="text" name="email" placeholder="Email">
 
-      <label for="password">Password:</label>
-      <input type="password" name="password" id="password">
+        <input type="text" name="password" placeholder="Пароль">
 
-      <button type="submit">Add User</button>
+        <button type="submit">Добавить пользователя</button>
     </form>
-  </body>
+</body>
 </html>
