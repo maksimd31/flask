@@ -1,5 +1,6 @@
 # filename hm6
-from fastapi import FastAPI, HTTPException
+# from email_valedator import validate_email, EmailNotValidError
+from fastapi import FastAPI, HTTPException, Path
 from pydantic import BaseModel, EmailStr, validator, ValidationError
 # from email_validator import validate_email, EmailNotValidError
 from typing import List
