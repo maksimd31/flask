@@ -1,6 +1,7 @@
 # filename hm6
 from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel, EmailStr, validator, ValidationError
+# from email_validator import validate_email, EmailNotValidError
 from typing import List
 
 app = FastAPI()
@@ -226,3 +227,10 @@ def delete_order(order_id: int):
             orders_db.pop(i)
             return {"message": "Order deleted successfully"}
     raise HTTPException(status_code=404, detail="Order not found")
+
+
+@validator('email')
+def email_validatorr(cls, email):
+    if not email.endswith('@example.com'):
+        raise ValueError('invalid email domain')
+    return email
