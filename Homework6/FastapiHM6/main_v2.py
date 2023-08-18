@@ -1,10 +1,7 @@
 # filename hm6
-
-
 # from email_valedator import validate_email, EmailNotValidError
 from fastapi import FastAPI, HTTPException, Path
-from pydantic import BaseModel, EmailStr, validator, ValidationError, validate_email
-# from email_validator import validate_email, EmailNotValidError
+from pydantic import BaseModel, EmailStr, validator, ValidationError
 # from email_validator import validate_email, EmailNotValidError
 from typing import List
 
@@ -18,55 +15,16 @@ class Product(BaseModel):
     price: float
 
 
-'Пытался сделать автоматическую валидацию ничего не вышло постоянно выдает ошибку No module named /email_validator/' \
-'Хотя все зависимости установлены'
-
-
-# class User(BaseModel):
-#     id: int
-#     first_name: str
-#     last_name: str
-#     email: str
-#     password: str
-#
-#     @validator('email')
-#     def email_validator(cls, email):
-#         try:
-#             valid = validate_email(email)
-#             email = valid.email
-#         except EmailNotValidError as e:
-#             raise ValueError(e)
-#         return email
-#
-#
-# users = []
-#
-#
-# class UserIn(BaseModel):
-#     first_name: str
-#     last_name: str
-#     email: str
-#     password: str
-#
-#
-# class UserOut(BaseModel):
-#     id: int
-#     first_name: str
-#     last_name: str
-#     email: str
-
-
 class User(BaseModel):
     id: int
     first_name: str
     last_name: str
-    try:
-        email: EmailStr
-    except ValidationError as e:
-        print(e)
     # email: EmailStr
     email: str
     password: str
+
+
+users = []
 
 
 class Order(BaseModel):
@@ -86,9 +44,9 @@ products_db = [
 
 # Таблица пользователей
 users_db = [
-    User(id=1, first_name='Иван', last_name='Иванов', email='ivan@mail.com', password='password1'),
-    User(id=2, first_name='Петр', last_name='Петров', email='petr@mail.com', password='password2'),
-    User(id=3, first_name='Сидор', last_name='Сидоров', email='sidor@mail.com', password='password3'),
+    User(id=1, first_name='Иван', last_name='Иванов', email='ivan@example.com', password='password1'),
+    User(id=2, first_name='Петр', last_name='Петров', email='petr@example.com', password='password2'),
+    User(id=3, first_name='Сидор', last_name='Сидоров', email='sidor@example.com', password='password3'),
 ]
 
 # Таблица заказов
@@ -116,8 +74,8 @@ class ProductOut(BaseModel):
 class UserIn(BaseModel):
     first_name: str
     last_name: str
-    email: str
     # email: EmailStr
+    email: str
     password: str
 
 
@@ -277,8 +235,4 @@ def delete_order(order_id: int):
             return {"message": "Order deleted successfully"}
     raise HTTPException(status_code=404, detail="Order not found")
 
-# @validator('email')
-# def email_validator(cls, email):
-#     if not email.endswith('@example.com'):
-#         raise ValueError('invalid email domain')
-#     return email
+
